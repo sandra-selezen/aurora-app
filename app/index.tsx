@@ -1,12 +1,17 @@
 import React from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router } from 'expo-router';
+import { Link, Redirect, router } from 'expo-router';
 
 import { images } from "../constants";
+import { useAuthContext } from '@/context/GlobalProvider';
 import CustomButton from '@/components/CustomButton';
 
 const App = () => {
+  const { loading, isLogged } = useAuthContext();
+
+  if (!loading && isLogged) return <Redirect href="/home" />;
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView
@@ -58,3 +63,7 @@ const App = () => {
 }
 
 export default App
+
+function useGlobalContext(): { loading: any; isLogged: any; } {
+  throw new Error('Function not implemented.');
+}

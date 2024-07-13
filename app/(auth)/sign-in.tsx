@@ -1,29 +1,52 @@
 import React, { useState } from 'react';
-import { Image, Text, ScrollView, View } from 'react-native';
+import { Image, Text, ScrollView, View, Alert, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
+import { useAuthContext } from '@/context/GlobalProvider';
+import { getCurrentUser, signIn } from '@/lib/appwrite';
 import { images } from "../../constants";
 import FormField from '@/components/FormField';
 import CustomButton from '@/components/CustomButton';
 
 const SignIn = () => {
+  const { setUser, setIsLogged } = useAuthContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const onSubmit = () => {}
+  const onSubmit = async () => {
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    setSubmitting(true);
+
+    try {
+      await signIn(form.email, form.password);
+      const result = await getCurrentUser();
+      setUser(result);
+      setIsLogged(true);
+
+      Alert.alert("Success", "User signed in successfully");
+      router.replace("/home");
+    } catch (error: any) {
+      Alert.alert("Error", error);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
           className="w-full flex justify-center h-full px-4 my-6"
-          // style={{
-          //   minHeight: Dimensions.get("window").height - 100,
-          // }}
+          style={{
+            minHeight: Dimensions.get("window").height - 100,
+          }}
         >
           <Image
             source={images.logo}
