@@ -1,43 +1,55 @@
-import React, { useState } from 'react';
-import { ResizeMode, Video } from 'expo-av';
-import * as Animatable from 'react-native-animatable';
+import React, { useRef, useState } from 'react';
 import {
   FlatList,
   Image,
   ImageBackground,
+  ImageStyle,
+  TextStyle,
   TouchableOpacity,
+  ViewStyle,
 } from "react-native";
+import { ResizeMode, Video } from 'expo-av';
+import * as Animatable from 'react-native-animatable';
 
 import { icons } from "../constants";
 
-const zoomIn = {
+type CombinedStyle = ViewStyle & TextStyle & ImageStyle;
+
+const zoomIn: Animatable.CustomAnimation<CombinedStyle> = {
   0: {
-    scale: 0.9,
+    scaleY: 0.9,
   },
   1: {
-    scale: 1,
+    scaleY: 1,
   },
 };
 
-const zoomOut = {
+const zoomOut: Animatable.CustomAnimation<CombinedStyle> = {
   0: {
-    scale: 1,
+    scaleY: 1,
   },
   1: {
-    scale: 0.9,
+    scaleY: 0.9,
   },
 };
+
+interface ITrendingItemProps {
+  activeItem: any;
+  item: ITrendingItem;
+}
 
 interface ITrendingItem {
-  activeItem: any;
-  item: any;
+  $id: string;
+  video: string;
+  thumbnail: string;
 }
 
 interface ITrending {
-  posts: any[];
+  posts: ITrendingItem[];
 }
 
-const TrendingItem = ({ activeItem, item }: ITrendingItem) => {
+const TrendingItem = ({ activeItem, item }: ITrendingItemProps) => {
+  const videoRef = useRef(null);
   const [play, setPlay] = useState(false);
 
   return (
@@ -48,12 +60,13 @@ const TrendingItem = ({ activeItem, item }: ITrendingItem) => {
     >
       {play ? (
         <Video
+          ref={videoRef}
           source={{ uri: item.video }}
           className="w-52 h-72 rounded-[33px] mt-3 bg-white/10"
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
-          onPlaybackStatusUpdate={(status) => {
+          onPlaybackStatusUpdate={(status: any) => {
             if (status.didJustFinish) {
               setPlay(false);
             }
@@ -105,7 +118,7 @@ const Trending = ({ posts }: ITrending) => {
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
-      contentOffset={{ x: 170 }}
+      contentOffset={{ x: 170, y: 0 }}
     />
   )
 }

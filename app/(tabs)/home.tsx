@@ -1,29 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, View, Text, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import useAppwrite from '@/hooks/useAppwrite';
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
 
 import { useAuthContext } from '@/context/GlobalProvider';
 import { images } from "../../constants";
 import SearchInput from '@/components/SearchInput';
 import Trending from '@/components/Trending';
 import EmptyState from '@/components/EmptyState';
+import VideoCard from '@/components/VideoCard';
 
 const Home = () => {
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestPosts } = useAppwrite(getLatestPosts);
   const { user } = useAuthContext();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={[]}
+        data={posts}
         keyExtractor={(item: any) => item.$id}
         renderItem={({ item }) => (
-          // <VideoCard
-          //   title={item.title}
-          //   thumbnail={item.thumbnail}
-          //   video={item.video}
-          //   creator={item.creator.username}
-          //   avatar={item.creator.avatar}
-          // />
-          <Text>fff</Text>
+          <VideoCard
+            title={item.title}
+            thumbnail={item.thumbnail}
+            video={item.video}
+            creator={item.creator}
+          />
         )}
         ListHeaderComponent={() => (
           <View className="flex my-6 px-4 space-y-6">
@@ -53,7 +64,7 @@ const Home = () => {
                 Latest Videos
               </Text>
 
-              <Trending posts={[]} />
+              <Trending posts={latestPosts ?? []} />
             </View>
           </View>
         )}
@@ -63,6 +74,7 @@ const Home = () => {
             subtitle="Be the first one to upload a video"
           />
         )}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     </SafeAreaView>
   )
