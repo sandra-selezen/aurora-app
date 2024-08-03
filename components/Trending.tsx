@@ -7,7 +7,7 @@ import {
   TextStyle,
   TouchableOpacity,
   ViewStyle,
-} from "react-native";
+} from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import * as Animatable from 'react-native-animatable';
 
@@ -49,8 +49,11 @@ interface ITrending {
 }
 
 const TrendingItem = ({ activeItem, item }: ITrendingItemProps) => {
-  const videoRef = useRef(null);
+  const videoRef = useRef<Video | null>(null);
   const [play, setPlay] = useState(false);
+  const [status, setStatus] = useState<any>({});
+
+  // console.log("videoRef", videoRef);
 
   return (
     <Animatable.View
@@ -66,17 +69,26 @@ const TrendingItem = ({ activeItem, item }: ITrendingItemProps) => {
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
+          isLooping
           onPlaybackStatusUpdate={(status: any) => {
             if (status.didJustFinish) {
               setPlay(false);
             }
           }}
+          // onPlaybackStatusUpdate={status => setStatus(() => status)}
         />
       ) : (
         <TouchableOpacity
           className="relative flex justify-center items-center"
           activeOpacity={0.7}
           onPress={() => setPlay(true)}
+          // onPress={() => {
+          //   if (status.isPlaying) {
+          //     videoRef.current?.pauseAsync(); // Optional chaining to check if videoRef.current is not null
+          //   } else {
+          //     videoRef.current?.playAsync(); // Optional chaining to check if videoRef.current is not null
+          //   }
+          // }}
         >
           <ImageBackground
             source={{

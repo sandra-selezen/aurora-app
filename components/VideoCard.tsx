@@ -4,7 +4,7 @@ import { ResizeMode, Video } from 'expo-av';
 
 import { icons } from '@/constants';
 
-interface IVideoCard {
+export interface IVideoCard {
   title: string;
   thumbnail: string;
   video: string;
@@ -58,7 +58,7 @@ const VideoCard = ({
 
       {play ? (
         <Video
-        ref={videoRef}
+          ref={videoRef}
           source={{ uri: video }}
           className="w-full h-60 rounded-xl mt-3"
           resizeMode={ResizeMode.CONTAIN}

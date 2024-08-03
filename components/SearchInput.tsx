@@ -6,6 +6,7 @@ import { icons } from "../constants";
 
 interface ISearchInput {
   initialQuery?: string;
+  refetch?: () => Promise<void>;
 }
 
 const SearchInput = ({ initialQuery }: ISearchInput) => {

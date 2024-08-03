@@ -4,6 +4,7 @@ import {
   Client,
   Databases,
   ID,
+  ImageGravity,
   Query,
   Storage,
 } from "react-native-appwrite";
@@ -123,8 +124,12 @@ export const signOut = async () => {
 export const uploadFile = async (file: any, type: any) => {
   if (!file) return;
 
-  const { mimeType, ...rest } = file;
-  const asset = { type: mimeType, ...rest };
+  const asset = { 
+    name: file.fileName,
+    type: file.mimeType,
+    size: file.fileSize,
+    uri: file.uri,
+  };
 
   try {
     const uploadedFile = await storage.createFile(
@@ -153,7 +158,7 @@ export const getFilePreview = async (fileId: string, type: string) => {
         fileId,
         2000,
         2000,
-        "top",
+        "top" as ImageGravity,
         100
       );
     } else {
@@ -200,7 +205,8 @@ export const getAllPosts = async () => {
   try {
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
-      appwriteConfig.videoCollectionId
+      appwriteConfig.videoCollectionId,
+      [Query.orderDesc("$createdAt")]
     );
 
     return posts.documents;
