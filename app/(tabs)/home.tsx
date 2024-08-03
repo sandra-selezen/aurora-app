@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, View, Text, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 import useAppwrite from '@/hooks/useAppwrite';
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
@@ -72,6 +73,8 @@ const Home = () => {
           <EmptyState
             title="No Videos Found"
             subtitle="Be the first one to upload a video"
+            buttonTitle="Create"
+            onButtonClick={() => router.push("/create")}
           />
         )}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

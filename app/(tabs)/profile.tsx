@@ -38,6 +38,8 @@ const Profile = () => {
           <EmptyState
             title="No Videos Found"
             subtitle="No videos found for this profile"
+            buttonTitle="Create"
+            onButtonClick={() => router.push("/create")}
           />
         )}
         ListHeaderComponent={() => (

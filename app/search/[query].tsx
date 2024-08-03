@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { View, Text, SafeAreaView, FlatList } from 'react-native';
 import useAppwrite from '@/hooks/useAppwrite';
 import { searchPosts } from '@/lib/appwrite';
@@ -48,6 +48,8 @@ const Search = () => {
           <EmptyState
             title="No Videos Found"
             subtitle="No videos found for this search query"
+            buttonTitle="Back to Explore"
+            onButtonClick={() => router.push("/home")}
           />
         )}
       />

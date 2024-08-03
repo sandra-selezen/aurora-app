@@ -7,9 +7,11 @@ import CustomButton from "./CustomButton";
 interface IEmptyState {
   title: string;
   subtitle: string;
+  buttonTitle: string;
+  onButtonClick: () => void;
 }
 
-const EmptyState = ({ title, subtitle }: IEmptyState) => {
+const EmptyState = ({ title, subtitle, buttonTitle, onButtonClick }: IEmptyState) => {
   return (
     <View className="flex justify-center items-center px-4">
       <Image
@@ -24,8 +26,8 @@ const EmptyState = ({ title, subtitle }: IEmptyState) => {
       </Text>
 
       <CustomButton
-        title="Create video"
-        handlePress={() => router.push("/create")}
+        title={buttonTitle}
+        handlePress={onButtonClick}
         containerStyles="w-full my-5"
       />
     </View>
